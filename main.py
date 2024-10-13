@@ -38,7 +38,7 @@ rooms = {
     "items": ["Rations", "Health potion", "Shield","Gold pieces", "Pickaxe",
               "Flint & steel"],
     "east": "Mid Hallway 1",
-    "north":locations[0],
+    "north":locations[0], 
     "south": "Skeleton"
   },
   "N Hallway 1":
@@ -65,7 +65,6 @@ rooms = {
     "east": "S Hallway 2",
     "west": "Treasure room",
     "north":"Mid Hallway 1",
-    "south": "S Hallway 1"
   },
   "S Hallway 2":
   {
@@ -76,11 +75,17 @@ rooms = {
     #"south": "Exit"
   
   },
-
+  "Treasure room":
+  {
+    "description": "You enter a room with a bunch of coins",
+    "items": ["Gold peices", "Gold peices","Gold peices"],
+    "west": "S Hallway 1",
+  
+  },
   "Boss Room":
   {
     "description": "You feel an ominous presence",
-    "items": ["Dead Person"],
+    "items": ["Dead person"],
     "north":"Boss",
     "south": "It's closed off"
   },
@@ -114,7 +119,23 @@ def navigate(direction):
     os.system('clear')
     print("Can't go there!\n")
 
+def Investigate():
+  answer = ""
+  items_list = rooms[player["current_room"]]["items"]
+  for i in items_list:
+    select_item = i
+    if items_list.index(select_item) == len(items_list)-1:
+      answer += " and"
 
+    if select_item[-1] == "s":
+      if items_list.index(select_item) == 0:
+        answer += "There are"
+      answer += " some " + select_item.lower() +','
+    else:
+      if items_list.index(select_item) == 0:
+        answer += "There is"
+      answer += " a " + select_item.lower() + ","
+  return answer
 
 
 SkeletonFight = FightingMenu(player["HP"],rooms["Skeleton"]["HP"],player["MP"],rooms["Skeleton"]["MP"])
@@ -122,10 +143,16 @@ SkeletonFight = FightingMenu(player["HP"],rooms["Skeleton"]["HP"],player["MP"],r
 
 while True:
   print(ShowDescription(player["current_room"]))
+  
+  
   if(player["current_room"] == "Skeleton"):
-    while SkeletonFight.Fighting:
-      SkeletonFight.MainUI()
-    
+    if SkeletonFight.Alive == True:
+      while SkeletonFight.Fighting:
+        SkeletonFight.MainUI()
+      player["current_room"] = previous_room
+      if SkeletonFight.Alive == True:
+        SkeletonFight.Fighting = True
+  previous_room = player["current_room"]
   choice = input("What do you want to do? \nMove: N,S,E,W,\nInvestigate\nAttack\netc...\n").lower()
   if "move" in choice:
     if choice[5::] in ["north","south","east","west"]:
@@ -133,9 +160,12 @@ while True:
     else:
       os.system('clear')
       print("Please print a valid direction, ex: North, South\n")
+  elif "investigate" in choice:
+    os.system('clear')
+    print(Investigate())
   else:
     os.system('clear')
-    print("Please use a valid command\n")
+    print("Please use a valid command\n") 
 
     
   
