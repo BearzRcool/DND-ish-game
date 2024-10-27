@@ -37,13 +37,12 @@ rooms = {
   {"description": "You enter an old Campsite.",
     "items": ["Rations", "Health potion", "Shield","Gold pieces", "Pickaxe",
               "Flint & steel"],
-    "east": "Mid Hallway 1",
     "north":locations[0], 
     "south": "Skeleton"
   },
   "N Hallway 1":
   {
-    "description": "You are now in a humid hallway.",
+    "description": "You are now in a hallway. You seem to be at the start of the hallway.",
     "items": ["Helmet"],
     "east": "Hallway",
     "north":locations[0],
@@ -51,7 +50,7 @@ rooms = {
   },
   "Mid Hallway 1":
   {
-    "description": "You are now in a humid hallway",
+    "description": "You are now in a hallway. You seem to be in the end of the hallway",
     "items": [],
     "east": "Dead End",
     "west": location[locations[0]][3],
@@ -60,7 +59,7 @@ rooms = {
   },
   "S Hallway 1":
   {
-    "description": "You are now in a humid hallway",
+    "description": "You are now in a room.",
     "items": ["Gold vase"],
     "east": "S Hallway 2",
     "west": "Treasure room",
@@ -68,7 +67,7 @@ rooms = {
   },
   "S Hallway 2":
   {
-    "description": "You are now in a humid hallway",
+    "description": "You are now in a room.",
     "items": [],
     "west": "S Hallway 1",
     "north":"Boss Room"
@@ -111,31 +110,34 @@ def navigate(direction):
   current_room = player["current_room"]
   
   if direction in rooms[current_room]:
-    os.system('clear')
+    os.system('cls')
     player["current_room"] = rooms[current_room][direction]
     
  
   else:
-    os.system('clear')
+    os.system('cls')
     print("Can't go there!\n")
 
 def Investigate():
   answer = ""
   items_list = rooms[player["current_room"]]["items"]
-  for i in items_list:
-    select_item = i
-    if items_list.index(select_item) == len(items_list)-1:
-      answer += " and"
+  if items_list != "":
+    for i in items_list:
+      select_item = i
+      if items_list.index(select_item) == len(items_list)-1:
+        answer += " and"
 
-    if select_item[-1] == "s":
-      if items_list.index(select_item) == 0:
-        answer += "There are"
-      answer += " some " + select_item.lower() +','
-    else:
-      if items_list.index(select_item) == 0:
-        answer += "There is"
-      answer += " a " + select_item.lower() + ","
-  return answer
+      if select_item[-1] == "s":
+        if items_list.index(select_item) == 0:
+          answer += "There are"
+        answer += " some " + select_item.lower() +','
+      else:
+        if items_list.index(select_item) == 0:
+          answer += "There is"
+        answer += " a " + select_item.lower() + ","
+    return answer + "\n"
+  else:
+    return "There are no items"
 
 
 SkeletonFight = FightingMenu(player["HP"],rooms["Skeleton"]["HP"],player["MP"],rooms["Skeleton"]["MP"])
@@ -158,13 +160,13 @@ while True:
     if choice[5::] in ["north","south","east","west"]:
       navigate(choice[5::])
     else:
-      os.system('clear')
+      os.system('cls')
       print("Please print a valid direction, ex: North, South\n")
   elif "investigate" in choice:
-    os.system('clear')
+    os.system('cls')
     print(Investigate())
   else:
-    os.system('clear')
+    os.system('cls')
     print("Please use a valid command\n") 
 
     
