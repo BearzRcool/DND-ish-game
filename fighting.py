@@ -16,7 +16,7 @@ class FightingMenu:
     self.EnemyMP = EnemyMP
     self.NumEscapes = 0
     self.Fighting = True
-    self.Alive = True
+
     self.PlayerAttacks = {"punch":{"damege":10,"hit%":80},"sword":{"damege":25,"hit%":75
 },"bow":{"damege":15,"hit%":70}}
     self.EnemyAttacks = {"punch":{"damege":5,"hit%":50}, "sword":{"damege":15,"hit%":40}}
@@ -59,44 +59,48 @@ class FightingMenu:
         self.ItemUI()
       else:
         print("Invalid input")
-        os.system("cls")
+        os.system("clear")
 
   def FightUI(self):
-    os.system("cls")
+    os.system("clear")
     misspell = False
       
-    attack = input("What do you want to do?\n 1.Punch\n 2. Sword \n 3. Bow \n").lower()
+    attack = input("What do you want to do?\n 1. Punch\n 2. Sword \n 3. Bow \n").lower()
     hit = random.randint(0,100)
-    os.system("cls")
-    if "punch" in attack and self.PlayerAttacks["punch"]["hit%"] >= hit:
+    os.system("clear")
+    if "punch" == attack and self.PlayerAttacks["punch"]["hit%"] >= hit:
       self.EnemyHP -= self.PlayerAttacks["punch"]["damege"]
       print("You hit the enemy :) dealt " + str(self.PlayerAttacks["punch"]["damege"])
             + " damege")
       misspell = False
       
-    elif "sword" in attack and self.PlayerAttacks["sword"]["hit%"] >= hit:
+    elif "sword" == attack and self.PlayerAttacks["sword"]["hit%"] >= hit:
       self.EnemyHP -= self.PlayerAttacks["sword"]["damege"]
       print("You hit the enemy :) dealt " + str(self.PlayerAttacks["sword"]["damege"])
             + " damege")
       misspell = False
       
-    elif "bow" in attack and self.PlayerAttacks["bow"]["hit%"] >= hit:
+    elif "bow" == attack and self.PlayerAttacks["bow"]["hit%"] >= hit:
         self.EnemyHP -= self.PlayerAttacks["bow"]["damege"]
         print("You hit the enemy :) dealt " + str(self.PlayerAttacks["bow"]["damege"])
             + " damege")
         misspell = False
 
-    if "punch" not in attack or "sword" not in attack or "bow" not in attack:
-      os.system('cls')
+    if "punch" not in attack and "sword" not in attack and "bow" not in attack:
+      os.system('clear')
       print("Please spell correctly")
       misspell = True
+    
+    elif self.EnemyHP <= 0:
+      print("You killed the enemy!\n")
+      self.Fighting = False
+    
     else:
       print("You did not hit the enemy :(")
-    if self.EnemyHP <= 0:
-      print("You killed the enemy!")
-      self.Fighting = False
-      self.Alive = False
-    if self.Alive and misspell == False:
+
+   
+      
+    if self.Fighting and misspell == False:
       enemy_attack = random.randint(0,100)
       enemy_hit = random.randint(0,100)
       if enemy_attack <= 60:
@@ -119,7 +123,7 @@ class FightingMenu:
     escapes = ((
         (self.PlayerHP * 128 / self.EnemyHP) + 30) * self.NumEscapes) % 256
     number = random.randint(0, 255)
-    os.system("cls")
+    os.system("clear")
     if number < escapes:
       print("You have fled the battle")
       self.Fighting = False
