@@ -15,7 +15,7 @@ rooms = {
   "Skeleton":
   {
     "description": "You encounter a skeleton!",
-     "inventory":["Spear","Sheild"],
+     "items":["spear","sheild"],
      "HP": 100,
      "MP": 20,
     "Dmg": 10,
@@ -28,29 +28,29 @@ rooms = {
   },
   locations[0]: 
   {"description": "You enter a cave.",
-   "items": ["Broken pickaxe", "Unlit torch", "Broken sword"],
+   "items": ["broken pickaxe", "unlit torch", "broken sword"],
    "south": location[locations[0]][3], # mine camp
    "east": "N Hallway 1",
    "north": "Exit" 
   },
   location[locations[0]][3]:
   {"description": "You enter an old Campsite.",
-    "items": ["Rations", "Health potion", "Shield","Gold pieces", "Pickaxe",
-              "Flint & steel"],
+    "items": ["rations", "health potion", "shield","gold pieces", "pickaxe",
+              "flint & steel"],
     "north":locations[0], 
     "south": "Skeleton"
   },
   "N Hallway 1":
   {
-    "description": "You are now in a hallway. You seem to be at the start of the hallway.",
-    "items": ["Helmet"],
+    "description": "You are now in a hallway.",
+    "items": ["helmet"],
     "east": "Hallway",
     "north":locations[0],
     "south": "Mid Hallway 1"
   },
   "Mid Hallway 1":
   {
-    "description": "You are now in a hallway. You seem to be in the end of the hallway",
+    "description": "You make your way through the hallway.",
     "items": [],
     "east": "Dead End",
     "west": location[locations[0]][3],
@@ -60,7 +60,7 @@ rooms = {
   "S Hallway 1":
   {
     "description": "You are now in a room.",
-    "items": ["Gold vase"],
+    "items": ["gold vase"],
     "east": "S Hallway 2",
     "west": "Treasure room",
     "north":"Mid Hallway 1",
@@ -77,31 +77,47 @@ rooms = {
   "Treasure room":
   {
     "description": "You enter a room with a bunch of coins",
-    "items": ["Gold peices", "Gold peices","Gold peices"],
+    "items": ["gold peices", "gold peices","gold peices"],
     "west": "S Hallway 1",
   
   },
   "Boss Room":
   {
     "description": "You feel an ominous presence",
-    "items": ["Dead person"],
+    "items": ["dead person"],
     "north":"Boss",
     "south": "It's closed off"
   },
   "Dead End":
   {
     "description": "You have reached a dead end",
-    "items": ["Rusty sword"],
+    "items": ["rusty sword"],
     "west": "Mid Hallway 1"
 
   },
 }
 player = {
   "current_room":locations[0],
-  "inventory": [],
+  "inventory": ["sword","bow"],
   "HP" : 100,
   "MP" : 100
 }
+
+def Inventory():
+  answer = "You have these items: "
+  answer += ', '.join(player["inventory"])
+  print (answer)
+  
+
+
+def Take(item):
+  room_stash = rooms[player["current_room"]]["items"]
+  if item in room_stash:
+    player["inventory"].append(item)
+    room_stash.remove(item)
+    print("You have taken the " + item + "\n")
+  else:
+    print("Please spell correctly")
 
 def ShowDescription(room):
   return rooms[room]["description"]
@@ -110,12 +126,12 @@ def navigate(direction):
   current_room = player["current_room"]
   
   if direction in rooms[current_room]:
-    os.system('cls')
+    os.system('clear')
     player["current_room"] = rooms[current_room][direction]
     
  
   else:
-    os.system('cls')
+    os.system('clear')
     print("Can't go there!\n")
 
 def Investigate():
@@ -138,6 +154,14 @@ def Investigate():
     return answer + "\n"
   else:
     return "There are no items"
+  
+
+
+
+
+
+
+
 
 
 SkeletonFight = FightingMenu(player["HP"],rooms["Skeleton"]["HP"],player["MP"],rooms["Skeleton"]["MP"])
@@ -146,28 +170,37 @@ SkeletonFight = FightingMenu(player["HP"],rooms["Skeleton"]["HP"],player["MP"],r
 while True:
   print(ShowDescription(player["current_room"]))
   
-  
-  if(player["current_room"] == "Skeleton"):
-    if SkeletonFight.Alive == True:
-      while SkeletonFight.Fighting:
-        SkeletonFight.MainUI()
-      player["current_room"] = previous_room
-      if SkeletonFight.Alive == True:
-        SkeletonFight.Fighting = True
   previous_room = player["current_room"]
+  
+ 
   choice = input("What do you want to do? \nMove: N,S,E,W,\nInvestigate\nAttack\netc...\n").lower()
   if "move" in choice:
     if choice[5::] in ["north","south","east","west"]:
       navigate(choice[5::])
     else:
-      os.system('cls')
+      os.system('clear')
       print("Please print a valid direction, ex: North, South\n")
   elif "investigate" in choice:
-    os.system('cls')
+    os.system('clear')
     print(Investigate())
+  elif "take" in choice:
+    os.system('clear')
+    Take(str(choice[5::]))
+  elif "inventory" in choice:
+    os.system('clear')
+    Inventory()
   else:
-    os.system('cls')
+    os.system('clear')
     print("Please use a valid command\n") 
+  
+
+  if(player["current_room"] == "Skeleton" and SkeletonFight.Fighting):
+      while SkeletonFight.Fighting:
+        SkeletonFight.MainUI()
+      player["current_room"] = previous_room
+  if(player["current_room"] == "Skeleton" and not SkeletonFight.Fighting):
+    rooms["Skeleton"]["description"] = "You enter an empty room with some bones on the ground"
+  
 
     
   
