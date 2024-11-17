@@ -25,6 +25,7 @@ rooms = {
     "Arms": [30, 4,],
     "Torso":[30, 3,],
     "Legs": [20, 2,],
+    
   },
   locations[0]: 
   {"description": "You enter a cave.",
@@ -200,6 +201,7 @@ while True:
       player["current_room"] = previous_room
   if(player["current_room"] == "Skeleton" and not SkeletonFight.Fighting):
     rooms["Skeleton"]["description"] = "You enter an empty room with some bones on the ground"
+    rooms["Skeleton"]["north"] = location[locations[0]][3]
   
 
     
