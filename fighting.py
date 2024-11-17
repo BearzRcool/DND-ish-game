@@ -9,7 +9,7 @@ import random, os
 
 class FightingMenu:
   # constructor- a function that starts up when you first make a class.
-  def __init__(self, PlayerHP, EnemyHP, PlayerMP, EnemyMP):
+  def __init__(self, PlayerHP, EnemyHP, PlayerMP, EnemyMP, EnemyAttacks, EnemyArt):
     self.PlayerHP = PlayerHP
     self.EnemyHP = EnemyHP
     self.PlayerMP = PlayerMP
@@ -132,4 +132,4 @@ class FightingMenu:
       print("You have not escaped the battle")
 
   def ItemUI(self):
-    pass
+    pass 
