@@ -1,5 +1,6 @@
 import os
 from fighting import FightingMenu
+import enemies
 
 location = {"Cave": ["Dead End", "Fork Path", "Mineshaft", "Campsite", "Exit"], 
             "Mountain": ["Cave", "Dragon Nest", "Town", "Trader"], 
@@ -12,21 +13,7 @@ locations = list(location.keys())
 # gives you back a list of all of the keys within a dictionary
 
 rooms = {
-  "Skeleton":
-  {
-    "description": "You encounter a skeleton!",
-     "items":["spear","sheild"],
-     "HP": 100,
-     "MP": 20,
-    "Dmg": 10,
-    "Crit Dmg": 25,
-    "Crit Rate": 10,
-    "Head": [60, 8,],
-    "Arms": [30, 4,],
-    "Torso":[30, 3,],
-    "Legs": [20, 2,],
-    
-  },
+  "Skeleton": enemies.Skeleton,
   locations[0]: 
   {"description": "You enter a cave.",
    "items": ["broken pickaxe", "unlit torch", "broken sword"],
@@ -101,7 +88,9 @@ player = {
   "current_room":locations[0],
   "inventory": ["sword","bow"],
   "HP" : 100,
-  "MP" : 100
+  "MP" : 100,
+  "attacks":[("punch", 15, 85), ("sword", 30, 75), ("bow", 20, 70)]
+
 }
 
 def Inventory():
@@ -165,7 +154,7 @@ def Investigate():
 
 
 
-SkeletonFight = FightingMenu(player["HP"],rooms["Skeleton"]["HP"],player["MP"],rooms["Skeleton"]["MP"])
+SkeletonFight = FightingMenu(player["HP"], rooms["Skeleton"]["HP"], player["MP"], rooms["Skeleton"]["MP"], enemies.Skeleton["attacks"], player["attacks"], enemies.Skeleton["image"],"skeleton")
 
 
 while True:
