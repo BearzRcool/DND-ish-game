@@ -4,44 +4,30 @@
 # objects- the thing (the child) you make from the class. A copy of the thing you made
 
 import random, os
+import enemies
 
 
 
 class FightingMenu:
   # constructor- a function that starts up when you first make a class.
-  def __init__(self, PlayerHP, EnemyHP, PlayerMP, EnemyMP, EnemyAttacks, EnemyArt):
+  def __init__(self, PlayerHP, EnemyHP, PlayerMP, EnemyMP, EnemyAttacks, PlayerAttacks, EnemyArt, EnemyName):
     self.PlayerHP = PlayerHP
     self.EnemyHP = EnemyHP
     self.PlayerMP = PlayerMP
     self.EnemyMP = EnemyMP
     self.NumEscapes = 0
     self.Fighting = True
+    self.Name = EnemyName
 
-    self.PlayerAttacks = {"punch":{"damege":10,"hit%":80},"sword":{"damege":25,"hit%":75
-},"bow":{"damege":15,"hit%":70}}
-    self.EnemyAttacks = {"punch":{"damege":5,"hit%":50}, "sword":{"damege":15,"hit%":40}}
+    self.PlayerAttacks = PlayerAttacks
+    self.EnemyAttacks = EnemyAttacks
 
-    self.art = '''     
-        .-.
-       (o.o)
-        |m|      /\\
-       __|__     ||
-     //.=|=.\\\\   ||
-    // .=|=. \\\\  ||
-    || .=|=.  \\\\ __
-    \\\\ .=|=.   \\\\//
-     \\\\(_=_)     ||
-      (:| |:)    ()
-       || ||
-       () ()
-       || ||
-       || ||
-     =='   '==
-
-       '''
-
+    self.art = EnemyArt
+    self.intro = 1
   def MainUI(self):
-    
+      if self.intro == 1:
+        print("A wild " + self.Name+ " apears!")
+        self.intro = 0
       print("-------------------------------------------------")
       print("Health: " + str(self.EnemyHP) + "\n" + "Mana:" + str(self.EnemyMP))
       print(self.art)
@@ -68,56 +54,51 @@ class FightingMenu:
     attack = input("What do you want to do?\n 1. Punch\n 2. Sword \n 3. Bow \n").lower()
     hit = random.randint(0,100)
     os.system("clear")
-    if "punch" == attack and self.PlayerAttacks["punch"]["hit%"] >= hit:
-      self.EnemyHP -= self.PlayerAttacks["punch"]["damege"]
-      print("You hit the enemy :) dealt " + str(self.PlayerAttacks["punch"]["damege"])
+    if "punch" == attack and self.PlayerAttacks[0][2] >= hit:
+      self.EnemyHP -= self.PlayerAttacks[0][1]
+      print("You hit the enemy :) dealt " + str(self.PlayerAttacks[1][1])
             + " damege")
       misspell = False
       
-    elif "sword" == attack and self.PlayerAttacks["sword"]["hit%"] >= hit:
-      self.EnemyHP -= self.PlayerAttacks["sword"]["damege"]
-      print("You hit the enemy :) dealt " + str(self.PlayerAttacks["sword"]["damege"])
+    elif "sword" == attack and self.PlayerAttacks[1][2] >= hit:
+      self.EnemyHP -= self.PlayerAttacks[1][1]
+      print("You hit the enemy :) dealt " + str(self.PlayerAttacks[1][1])
             + " damege")
       misspell = False
       
-    elif "bow" == attack and self.PlayerAttacks["bow"]["hit%"] >= hit:
-        self.EnemyHP -= self.PlayerAttacks["bow"]["damege"]
-        print("You hit the enemy :) dealt " + str(self.PlayerAttacks["bow"]["damege"])
+    elif "bow" == attack and self.PlayerAttacks[2][2] >= hit:
+        self.EnemyHP -= self.PlayerAttacks[2][1]
+        print("You hit the enemy :) dealt " + str(self.PlayerAttacks[2][1])
             + " damege")
         misspell = False
 
-    if "punch" not in attack and "sword" not in attack and "bow" not in attack:
+    elif "punch" not in attack and "sword" not in attack and "bow" not in attack:
       os.system('clear')
       print("Please spell correctly")
       misspell = True
-    
-    elif self.EnemyHP <= 0:
-      print("You killed the enemy!\n")
-      self.Fighting = False
-    
+
     else:
       print("You did not hit the enemy :(")
 
-   
-      
-    if self.Fighting and misspell == False:
-      enemy_attack = random.randint(0,100)
-      enemy_hit = random.randint(0,100)
-      if enemy_attack <= 60:
-        if self.EnemyAttacks["sword"]["hit%"]<= enemy_hit:
-          self.PlayerHP -= self.EnemyAttacks["sword"]["damege"]
-          print("The skeleton swung their sword and dealt 15 damege")
-        else:
-          print("The skeleton swung thier sword but misses you")
-      else:
-        if self.EnemyAttacks["punch"]["hit%"] <= enemy_hit:
-          self.PlayerHP -= self.EnemyAttacks["punch"]["damege"]
-          print("The skeleton punched you and did 5 damege")
-        else:
-          print("The skeleton tried to punch you but you dodged at the last second")
+    if self.EnemyHP <= 0:
+      print("You killed the enemy!\n")
+      self.Fighting = False
+    
 
-      
-      
+   
+    #EnemyAttacks:
+    for attack in range(0,len(self.EnemyAttacks)):  
+      if self.Fighting and misspell == False:
+        enemy_attack = random.randint(0,100)
+        enemy_hit = random.randint(0,100)
+
+        if enemy_attack <= 60:
+          if self.EnemyAttacks[attack][2]<= enemy_hit:
+            self.PlayerHP -= self.EnemyAttacks[attack][1]
+            print("The "+ self.Name + " did "+ str(self.EnemyAttacks[attack][1]) + " to you.")
+          else:
+            print("The "+ self.Name +" missed you")
+
 
   def Flee(self):
     escapes = ((
