@@ -154,12 +154,12 @@ def Investigate():
 
 
 
-SkeletonFight = FightingMenu(player["HP"], rooms["Skeleton"]["HP"], player["MP"], rooms["Skeleton"]["MP"], enemies.Skeleton["attacks"], player["attacks"], enemies.Skeleton["image"],"skeleton")
+Fight = FightingMenu(player["HP"], rooms["Skeleton"]["HP"], player["MP"], rooms["Skeleton"]["MP"], enemies.Skeleton["attacks"], player["attacks"], enemies.Skeleton["image"],"skeleton")
 
 
 while True:
-  print(ShowDescription(player["current_room"]))
   
+  print(ShowDescription(player["current_room"]))
   previous_room = player["current_room"]
   
  
@@ -167,6 +167,7 @@ while True:
   if "move" in choice:
     if choice[5::] in ["north","south","east","west"]:
       navigate(choice[5::])
+      
     else:
       os.system('clear')
       print("Please print a valid direction, ex: North, South\n")
@@ -183,12 +184,14 @@ while True:
     os.system('clear')
     print("Please use a valid command\n") 
   
-
-  if(player["current_room"] == "Skeleton" and SkeletonFight.Fighting):
-      while SkeletonFight.Fighting:
-        SkeletonFight.MainUI()
+  if(player["current_room"] == "Skeleton" and Fight.Fighting and Fight.Alive):
+      while Fight.Fighting:
+        Fight.MainUI()
+      
+      Fight.Fighting = True
       player["current_room"] = previous_room
-  if(player["current_room"] == "Skeleton" and not SkeletonFight.Fighting):
+
+  if(player["current_room"] == "Skeleton" and Fight.Alive == False):
     rooms["Skeleton"]["description"] = "You enter an empty room with some bones on the ground"
     rooms["Skeleton"]["north"] = location[locations[0]][3]
   
