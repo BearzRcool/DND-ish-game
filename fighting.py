@@ -18,6 +18,8 @@ class FightingMenu:
     self.NumEscapes = 0
     self.Fighting = True
     self.Name = EnemyName
+    self.Alive = True
+    self.misspell = False
 
     self.PlayerAttacks = PlayerAttacks
     self.EnemyAttacks = EnemyAttacks
@@ -49,7 +51,7 @@ class FightingMenu:
 
   def FightUI(self):
     os.system("clear")
-    misspell = False
+    self.misspell = False
       
     attack = input("What do you want to do?\n 1. Punch\n 2. Sword \n 3. Bow \n").lower()
     hit = random.randint(0,100)
@@ -58,24 +60,24 @@ class FightingMenu:
       self.EnemyHP -= self.PlayerAttacks[0][1]
       print("You hit the enemy :) dealt " + str(self.PlayerAttacks[1][1])
             + " damege")
-      misspell = False
+      self.misspell = False
       
     elif "sword" == attack and self.PlayerAttacks[1][2] >= hit:
       self.EnemyHP -= self.PlayerAttacks[1][1]
       print("You hit the enemy :) dealt " + str(self.PlayerAttacks[1][1])
             + " damege")
-      misspell = False
+      self.misspell = False
       
     elif "bow" == attack and self.PlayerAttacks[2][2] >= hit:
         self.EnemyHP -= self.PlayerAttacks[2][1]
         print("You hit the enemy :) dealt " + str(self.PlayerAttacks[2][1])
             + " damege")
-        misspell = False
+        self.misspell = False
 
     elif "punch" not in attack and "sword" not in attack and "bow" not in attack:
       os.system('clear')
       print("Please spell correctly")
-      misspell = True
+      self.misspell = True
 
     else:
       print("You did not hit the enemy :(")
@@ -83,19 +85,21 @@ class FightingMenu:
     if self.EnemyHP <= 0:
       print("You killed the enemy!\n")
       self.Fighting = False
-    
+      self.Alive = False
+      self.intro = 1
+
+    self.Attacks()
 
    
-    #EnemyAttacks:
+  def Attacks(self):
     for attack in range(0,len(self.EnemyAttacks)):  
-      if self.Fighting and misspell == False:
-        enemy_attack = random.randint(0,100)
-        enemy_hit = random.randint(0,100)
+        if self.Fighting and self.misspell == False:
+          enemy_hit = random.randint(0,100)
 
-        if enemy_attack <= 60:
-          if self.EnemyAttacks[attack][2]<= enemy_hit:
-            self.PlayerHP -= self.EnemyAttacks[attack][1]
-            print("The "+ self.Name + " did "+ str(self.EnemyAttacks[attack][1]) + " to you.")
+        
+          if self.EnemyAttacks[attack][2]>= enemy_hit:
+              self.PlayerHP -= self.EnemyAttacks[attack][1]
+              print("The "+ self.Name + " did "+ str(self.EnemyAttacks[attack][1]) + " to you.")
           else:
             print("The "+ self.Name +" missed you")
 
@@ -111,6 +115,7 @@ class FightingMenu:
     else:
       self.NumEscapes += 1
       print("You have not escaped the battle")
+      self.Attacks()
 
   def ItemUI(self):
     pass 
