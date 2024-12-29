@@ -1,7 +1,7 @@
 import os
 from fighting import FightingMenu
 import enemies
-
+EnemyTypes = [enemies.Skeleton, enemies.Boss_1]
 location = {"Cave": ["Dead End", "Fork Path", "Mineshaft", "Campsite", "Exit"],
             "Mountain": ["Cave", "Dragon Nest", "Town", "Trader"],
             "Town": ["Tavern", "Shop", "Blacksmith", "Vendor"],
@@ -67,12 +67,12 @@ rooms = {
         {
             "description": "You enter a room with a bunch of coins",
             "items": ["gold peices", "gold peices", "gold peices"],
-            "west": "S Hallway 1",
+            "east": "S Hallway 1",
 
         },
     "Boss Room":
         {
-            "description": "You feel an ominous presence",
+            "description": "The door slowly closes behind you",
             "items": ["dead person"],
             "north": "Boss",
             
@@ -90,7 +90,7 @@ player = {
     "inventory": ["sword", "bow"],
     "HP": 100,
     "MP": 100,
-    "attacks": [("punch", 15, 85), ("sword", 30, 75), ("bow", 20, 70)]
+    "attacks": [("punch", 15, 85), ("sword", 100, 75), ("bow", 20, 70)]
 
 }
 
@@ -152,9 +152,11 @@ def Investigate():
         return "There are no items"
 
 
-Fight = FightingMenu(player["HP"], rooms["Skeleton"]["HP"], player["MP"], rooms["Skeleton"]["MP"],
+FightSkeleton = FightingMenu(player["HP"], rooms["Skeleton"]["HP"], player["MP"], rooms["Skeleton"]["MP"],
                      enemies.Skeleton["attacks"], player["attacks"], enemies.Skeleton["image"], "skeleton")
 
+FightBoss = FightingMenu(player["HP"], rooms["Boss"]["HP"], player["MP"], rooms["Boss"]["MP"],
+                     enemies.Boss_1["attacks"], player["attacks"], enemies.Boss_1["image"], "boss")
 while True:
 
     print(ShowDescription(player["current_room"]))
@@ -183,31 +185,28 @@ while True:
         os.system('clear')
         print("Please use a valid command\n")
 
-    if (player["current_room"] == "Skeleton" and Fight.Fighting and Fight.Alive):
-        while Fight.Fighting:
-            Fight.MainUI()
+    if (player["current_room"] == "Skeleton" and FightSkeleton.Fighting and FightSkeleton.Alive):
+        while FightSkeleton.Fighting:
+            FightSkeleton.MainUI()
 
-        Fight.Fighting = True
+        FightSkeleton.Fighting = True
         player["current_room"] = previous_room
 
-    if (player["current_room"] == "Skeleton" and Fight.Alive == False):
+    if (player["current_room"] == "Skeleton" and FightSkeleton.Alive == False):
         rooms["Skeleton"]["description"] = "You enter an empty room with some bones on the ground"
         rooms["Skeleton"]["north"] = location[locations[0]][3]
 
 
 
-    if (player["current_room"] == "Boss" and Fight.Fighting and Fight.Alive):
-        while Fight.Fighting:
-            Fight.MainUI()
+    if (player["current_room"] == "Boss" and FightBoss.Fighting and FightBoss.Alive):
+        while FightBoss.Fighting:
+            FightBoss.MainUI()
 
-        Fight.Fighting = True
+        FightBoss.Fighting = True
         player["current_room"] = previous_room
+        rooms["Boss Room"]["south"] = "S Hallway 2"
 
-    if (player["current_room"] == "Boss" and Fight.Alive == False):
+    if (player["current_room"] == "Boss" and FightBoss.Alive == False):
         rooms["Boss"]["description"] = "You enter an empty room with a giant pool of sludge on the ground"
-        rooms["Boss"]["south"] = "Boss room"
-
-
-
-
-
+        rooms["Boss"]["south"] = "Boss Room"
+        
