@@ -88,20 +88,23 @@ class FightingMenu:
       self.Alive = False
       self.intro = 1
 
-    self.Attacks()
+    if self.Fighting:
+      self.Attacks()
 
    
   def Attacks(self):
+    probabilities_attack = []
     for attack in range(0,len(self.EnemyAttacks)):  
         if self.Fighting and self.misspell == False:
-          enemy_hit = random.randint(0,100)
+          enemy_attack = random.randint(0,self.EnemyAttacks[attack][2])
+          probabilities_attack.append(enemy_attack)
 
-        
-          if self.EnemyAttacks[attack][2]>= enemy_hit:
-              self.PlayerHP -= self.EnemyAttacks[attack][1]
-              print("The "+ self.Name + " did "+ str(self.EnemyAttacks[attack][1]) + " to you.")
-          else:
-            print("The "+ self.Name +" missed you")
+    
+    if self.misspell == False and random.randint(0,100) > max(probabilities_attack):
+        self.PlayerHP -= self.EnemyAttacks[attack][1]
+        print("The "+ self.Name + " did "+ str(self.EnemyAttacks[attack][1]) + " to you.")
+    else:
+      print("The "+ self.Name +" missed you")
 
 
   def Flee(self):
