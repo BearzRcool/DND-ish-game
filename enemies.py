@@ -2,7 +2,7 @@ Skeleton = {
     "description": "You encounter a skeleton!",
      "items":["spear","sheild"],
      "HP": 100,
-     "MP": 20,
+     "MP": 20,  #name   damage hit%
      "attacks": [("punch", 10, 40), ("sword", 15, 30)],
      "image":
      '''     
